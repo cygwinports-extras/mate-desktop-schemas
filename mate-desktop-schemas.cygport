@@ -1,0 +1,33 @@
+ORIG_PN="libmate"
+inherit mate
+
+NAME="mate-desktop-schemas"
+VERSION=1.4.0
+RELEASE=1
+CATEGORY="MATE"
+SUMMARY="MATE desktop preference schemas"
+DESCRIPTION="MATE is a fork of the GNOME 2 desktop. It provides an intuitive
+and attractive desktop to Linux users using traditional metaphors."
+
+mate_desktop_schemas_CONTENTS="etc/ usr/share/doc/ usr/share/mate-background-properties/"
+
+CYGCONF_ARGS="
+	LIBMATE_CFLAGS=YES
+	LIBMATE_LIBS=YES
+	ac_cv_lib_popt_poptStrippedArgv=yes
+"
+
+src_compile() {
+	cd ${S}
+	mate_autoreconf
+	cd ${B}
+	mate_configure
+	cygmake -C mate-data
+	cygmake -C schemas
+}
+
+src_install() {
+	cd ${B}
+	cyginstall -C mate-data man_MANS=
+	cyginstall -C schemas
+}
